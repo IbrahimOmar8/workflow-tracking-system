@@ -1,0 +1,334 @@
+<!-- workflow-create.component.html -->
+<div class="workflow-creator-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p class="loading-text">Loading workflow...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading">
+    <mat-card class="workflow-card" appearance="outlined">
+      <!-- Header -->
+      <mat-card-header class="card-header">
+        <div mat-card-avatar class="header-icon">
+          <mat-icon>{{ isEditMode ? 'edit' : 'assignment' }}</mat-icon>
+        </div>
+        <mat-card-title class="card-title">{{ getPageTitle() }}</mat-card-title>
+        <mat-card-subtitle class="card-subtitle">
+          {{ isEditMode ? 'Modify workflow details and manage process steps' : 'Define workflow steps and assignments to streamline your process' }}
+        </mat-card-subtitle>
+        <!-- <div class="header-actions" *ngIf="isEditMode && currentWorkflow">
+          <mat-chip-set>
+            <mat-chip 
+              [ngClass]="'status-' + currentWorkflow?.status"
+              selected>
+              <mat-icon matChipAvatar>{{ getStatusIcon(currentWorkflow.status) }}</mat-icon>
+              {{ getStatusLabel(currentWorkflow?.status) }}
+            </mat-chip>
+          </mat-chip-set>
+        </div> -->
+      </mat-card-header>
+
+      <mat-card-content class="card-content">
+        <form [formGroup]="workflowForm" (ngSubmit)="onSubmit()" novalidate>
+          
+          <!-- Basic Information Section -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <mat-icon>info</mat-icon>
+              Basic Information
+            </h3>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field full-width">
+                <mat-label>Workflow Name</mat-label>
+                <input 
+                  matInput 
+                  placeholder="Enter a descriptive workflow name" 
+                  formControlName="name"
+                  maxlength="100">
+                <mat-icon matSuffix>edit</mat-icon>
+                <mat-hint>{{ workflowForm.get('name')?.value?.length || 0 }}/100</mat-hint>
+                <mat-error>{{ getFieldError('name') }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field two-thirds">
+                <mat-label>Description</mat-label>
+                <textarea 
+                  matInput 
+                  placeholder="Describe the purpose and scope of this workflow"
+                  formControlName="description"
+                  rows="3"
+                  maxlength="500">
+                </textarea>
+                <mat-icon matSuffix>description</mat-icon>
+                <mat-hint>{{ workflowForm.get('description')?.value?.length || 0 }}/500</mat-hint>
+                <mat-error>{{ getFieldError('description') }}</mat-error>
+              </mat-form-field>
+
+              <!-- Priority Select Field -->
+              <mat-form-field appearance="outline" class="form-field one-third">
+                <mat-label>Priority</mat-label>
+                <mat-select formControlName="priority">
+                  <mat-option *ngFor="let priority of priorityOptions" [value]="priority.value">
+                    <mat-icon class="priority-icon" [ngClass]="priority.value">
+                      {{ priority.value === 'low' ? 'keyboard_arrow_down' : 
+                         priority.value === 'medium' ? 'remove' : 
+                         priority.value === 'high' ? 'keyboard_arrow_up' : 'priority_high' }}
+                    </mat-icon>
+                    {{ priority.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>flag</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field {{ isEditMode ? 'half-width' : 'full-width' }}">
+                <mat-label>Category</mat-label>
+                <mat-select formControlName="category">
+                  <mat-option *ngFor="let category of categoryOptions" [value]="category.value">
+                    {{ category.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>category</mat-icon>
+                <mat-error>{{ getFieldError('category') }}</mat-error>
+              </mat-form-field>
+
+              <!-- Status Field (only in edit mode)
+              <mat-form-field appearance="outline" class="form-field half-width" *ngIf="isEditMode">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                  <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+                    <mat-icon [ngClass]="'status-icon-' + status.value">
+                      {{ getStatusIcon(status.value) }}
+                    </mat-icon>
+                    {{ status.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>timeline</mat-icon>
+                <mat-error>{{ getFieldError('status') }}</mat-error>
+              </mat-form-field>
+            </div> -->
+
+            <!-- Workflow Statistics (only in edit mode) -->
+            <div class="workflow-stats" *ngIf="isEditMode && currentWorkflow">
+              <div class="stat-item">
+                <mat-icon>date_range</mat-icon>
+                <div class="stat-content">
+                  <span class="stat-label">Created</span>
+                  <span class="stat-value">{{ currentWorkflow.createdAt | date:'short' }}</span>
+                </div>
+              </div>
+              <div class="stat-item">
+                <mat-icon>update</mat-icon>
+                <div class="stat-content">
+                  <span class="stat-label">Last Updated</span>
+                  <span class="stat-value">{{ currentWorkflow.updatedAt | date:'short' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Workflow Steps Section -->
+          <div class="form-section steps-section" formArrayName="steps">
+            <div class="section-header">
+              <h3 class="section-title">
+                <mat-icon>list</mat-icon>
+                Workflow Steps
+                <mat-chip class="steps-count">{{ steps.length }}</mat-chip>
+              </h3>
+              <button 
+                mat-fab 
+                color="primary" 
+                (click)="addStep()" 
+                type="button"
+                class="add-step-fab"
+                matTooltip="Add New Step">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+
+            <div class="steps-container">
+              <div 
+                class="step-card" 
+                *ngFor="let step of steps.controls; let i = index"
+                [formGroupName]="i">
+                
+                <mat-card class="step-inner-card" appearance="outlined">
+                  <mat-card-header class="step-header">
+                    <div mat-card-avatar class="step-number">
+                      {{ i + 1 }}
+                    </div>
+                    <mat-card-title class="step-title">
+                      Step {{ i + 1 }}
+                      <mat-chip 
+                        *ngIf="isEditMode"
+                        class="step-status-chip"
+                        [ngClass]="'status-' + step.get('status')?.value">
+                        {{ getStepStatusLabel(step.get('status')?.value) }}
+                      </mat-chip>
+                    </mat-card-title>
+                    <div class="step-actions">
+                      <button
+                        mat-icon-button
+                        color="primary"
+                        (click)="moveStepUp(i)"
+                        type="button"
+                        [disabled]="i === 0"
+                        matTooltip="Move Up">
+                        <mat-icon>keyboard_arrow_up</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        color="primary"
+                        (click)="moveStepDown(i)"
+                        type="button"
+                        [disabled]="i === steps.length - 1"
+                        matTooltip="Move Down">
+                        <mat-icon>keyboard_arrow_down</mat-icon>
+                      </button>
+                      <button
+                        mat-icon-button
+                        color="warn"
+                        (click)="removeStep(i)"
+                        type="button"
+                        [disabled]="steps.length <= 1"
+                        matTooltip="Remove Step">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </mat-card-header>
+
+                  <mat-card-content class="step-content">
+                    <div class="form-row">
+                      <mat-form-field appearance="outline" class="form-field half-width">
+                        <mat-label>Step Name</mat-label>
+                        <input
+                          matInput
+                          placeholder="e.g., Initial Review"
+                          formControlName="step_name"
+                          maxlength="50">
+                        <mat-icon matSuffix>label</mat-icon>
+                        <mat-error>{{ getStepFieldError(i, 'step_name') }}</mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="form-field half-width">
+                        <mat-label>Assigned To</mat-label>
+                        <input
+                          matInput
+                          placeholder="Role or specific user"
+                          formControlName="assigned_to"
+                          maxlength="50">
+                        <mat-icon matSuffix>person</mat-icon>
+                        <mat-error>{{ getStepFieldError(i, 'assigned_to') }}</mat-error>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
+                      <mat-form-field appearance="outline" class="form-field {{ isEditMode ? 'one-third' : 'half-width' }}">
+                        <mat-label>Action Type</mat-label>
+                        <mat-select formControlName="action_type">
+                          <mat-option *ngFor="let actionType of actionTypes" [value]="actionType.value">
+                            {{ actionType.label }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-icon matSuffix>settings</mat-icon>
+                        <mat-error>{{ getStepFieldError(i, 'action_type') }}</mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="form-field {{ isEditMode ? 'one-third' : 'half-width' }}">
+                        <mat-label>Estimated Duration</mat-label>
+                        <input
+                          matInput
+                          placeholder="e.g., 2 days, 4 hours"
+                          formControlName="estimated_duration">
+                        <mat-icon matSuffix>schedule</mat-icon>
+                      </mat-form-field>
+
+                      <!-- Step Status (only in edit mode)
+                      <mat-form-field appearance="outline" class="form-field one-third" *ngIf="isEditMode">
+                        <mat-label>Step Status</mat-label>
+                        <mat-select formControlName="status">
+                          <mat-option value="pending">Pending</mat-option>
+                          <mat-option value="in_progress">In Progress</mat-option>
+                          <mat-option value="completed">Completed</mat-option>
+                          <mat-option value="blocked">Blocked</mat-option>
+                        </mat-select>
+                        <mat-icon matSuffix>timeline</mat-icon>
+                      </mat-form-field> -->
+                    </div>
+
+                    <div class="form-row">
+                      <mat-form-field appearance="outline" class="form-field full-width">
+                        <mat-label>Next Step</mat-label>
+                        <input
+                          matInput
+                          placeholder="Next step name or 'Completed'"
+                          formControlName="next_step">
+                        <mat-icon matSuffix>arrow_forward</mat-icon>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
+                      <mat-form-field appearance="outline" class="form-field full-width">
+                        <mat-label>Step Description</mat-label>
+                        <textarea 
+                          matInput 
+                          placeholder="Additional details for this step"
+                          formControlName="description"
+                          rows="2">
+                        </textarea>
+                        <mat-icon matSuffix>notes</mat-icon>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="checkbox-row">
+                      <mat-checkbox formControlName="requires_validation" class="checkbox-field">
+                        Requires Validation
+                      </mat-checkbox>
+                      <mat-checkbox formControlName="is_parallel" class="checkbox-field">
+                        Can Run in Parallel
+                      </mat-checkbox>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <mat-card-actions class="form-actions">
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="!isFormValid || isSubmitting"
+              class="submit-button">
+              <mat-spinner diameter="20" *ngIf="isSubmitting"></mat-spinner>
+              <mat-icon *ngIf="!isSubmitting">{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+              {{ getSubmitButtonText() }}
+            </button>
+            
+            <button
+              mat-stroked-button
+              color="accent"
+              type="button"
+              (click)="resetForm()"
+              class="reset-button"
+              [disabled]="isSubmitting">
+              <mat-icon>refresh</mat-icon>
+              {{ isEditMode ? 'Reset Changes' : 'Reset Form' }}
+            </button>
+
+            <button
+              *ngIf="isEditMode"
+              mat-stroked-button
+              color="warn"
+              type="button"
+              (click)="goBack()"
+              class="cancel-button">
+              <mat-icon>arrow_back</mat-icon>

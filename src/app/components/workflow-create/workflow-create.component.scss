@@ -1,0 +1,377 @@
+// workflow-creator.component.scss
+
+.workflow-creator-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.workflow-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 16px !important;
+  overflow: hidden;
+  background: white;
+  
+  .mat-mdc-card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 24px 32px;
+    
+    .header-icon {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      mat-icon {
+        color: white;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+    
+    .card-title {
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-top: 8px;
+    }
+  }
+  
+  .card-content {
+    padding: 32px;
+  }
+}
+
+.form-section {
+  margin-bottom: 40px;
+  
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e5e7eb;
+    
+    mat-icon {
+      color: #667eea;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    
+    .add-step-fab {
+      width: 48px;
+      height: 48px;
+      
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: flex-start;
+  
+  .form-field {
+    &.full-width {
+      flex: 1;
+      width: 100%;
+    }
+    
+    &.half-width {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    &.one-third {
+      flex: 0 0 calc(33.333% - 11px);
+    }
+    
+    &.two-thirds {
+      flex: 0 0 calc(66.666% - 5px);
+    }
+  }
+}
+
+.checkbox-row {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+  
+  .checkbox-field {
+    .mat-mdc-checkbox {
+      --mdc-checkbox-selected-checkmark-color: white;
+      --mdc-checkbox-selected-focus-icon-color: #667eea;
+      --mdc-checkbox-selected-hover-icon-color: #667eea;
+      --mdc-checkbox-selected-icon-color: #667eea;
+      --mdc-checkbox-selected-pressed-icon-color: #667eea;
+    }
+  }
+}
+
+.steps-section {
+  .steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .step-card {
+    animation: slideInUp 0.3s ease-out;
+    
+    .step-inner-card {
+      border-radius: 12px;
+      border: 2px solid #e5e7eb;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        border-color: #667eea;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        transform: translateY(-2px);
+      }
+      
+      .step-header {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-bottom: 1px solid #e5e7eb;
+        padding: 16px 24px;
+        
+        .step-number {
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: white;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          font-size: 0.875rem;
+        }
+        
+        .step-title {
+          font-size: 1.125rem;
+          font-weight: 600;
+          color: #374151;
+          margin: 0;
+        }
+        
+        .step-actions {
+          margin-left: auto;
+          
+          button {
+            transition: all 0.3s ease;
+            
+            &:hover:not(:disabled) {
+              transform: scale(1.1);
+            }
+            
+            &:disabled {
+              opacity: 0.3;
+            }
+          }
+        }
+      }
+      
+      .step-content {
+        padding: 24px;
+      }
+    }
+  }
+}
+
+// Priority icons styling
+.priority-icon {
+  margin-right: 8px;
+  vertical-align: middle;
+  
+  &.low {
+    color: #22c55e;
+  }
+  
+  &.medium {
+    color: #f59e0b;
+  }
+  
+  &.high {
+    color: #ef4444;
+  }
+  
+  &.urgent {
+    color: #dc2626;
+  }
+}
+
+// Form field styling
+.mat-mdc-form-field {
+  &.mat-form-field-appearance-outline {
+    .mat-mdc-form-field-outline {
+      border-radius: 8px;
+    }
+    
+    &.mat-focused .mat-mdc-form-field-outline-thick {
+      color: #667eea;
+    }
+    
+    .mat-mdc-form-field-label {
+      color: #6b7280;
+    }
+    
+    &.mat-focused .mat-mdc-form-field-label {
+      color: #667eea;
+    }
+  }
+  
+  .mat-mdc-form-field-suffix {
+    .mat-icon {
+      color: #9ca3af;
+      transition: color 0.3s ease;
+    }
+  }
+  
+  &.mat-focused .mat-mdc-form-field-suffix .mat-icon {
+    color: #667eea;
+  }
+}
+
+// Form actions
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 24px 32px;
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+  margin: 32px -32px -32px -32px;
+  
+  .submit-button {
+    padding: 0 32px;
+    height: 48px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+  
+  .reset-button {
+    padding: 0 24px;
+    height: 48px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 2px solid #667eea;
+    color: #667eea;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-1px);
+    }
+    
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Animations
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .workflow-creator-container {
+    padding: 10px;
+  }
+  
+  .workflow-card .card-content {
+    padding: 20px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+    
+    .form-field {
+      width: 100% !important;
+      flex: none !important;
+    }
+  }
+  
+  .checkbox-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+    
+    .submit-button,
+    .reset-button {
+      width: 100%;
+      margin: 0;
+    }
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    
+    .add-step-fab {
+      align-self: center;
+    }
+  }
+}
