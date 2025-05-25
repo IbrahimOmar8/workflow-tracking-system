@@ -1,0 +1,258 @@
+ .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding: 24px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .header-content h1 {
+      margin: 0 0 8px 0;
+      font-size: 32px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .header-content p {
+      margin: 0;
+      color: #6c757d;
+      font-size: 16px;
+    }
+
+    .create-workflow-btn {
+      height: 48px;
+      padding: 0 24px;
+      font-weight: 500;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
+    .stat-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 24px !important;
+    }
+
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .stat-details h3 {
+      margin: 0 0 4px 0;
+      font-size: 28px;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .stat-details p {
+      margin: 0 0 8px 0;
+      color: #6c757d;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .stat-change {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .stat-change.positive {
+      color: #28a745;
+    }
+
+    .stat-change.negative {
+      color: #dc3545;
+    }
+
+    .stat-change mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .workflows-card, .quick-actions-card, .activity-card {
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .workflow-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .workflow-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      background: #fafafa;
+    }
+
+    .workflow-info h4 {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .workflow-info p {
+      margin: 0;
+      font-size: 14px;
+      color: #6c757d;
+    }
+
+    .workflow-status {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .progress-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 120px;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6c757d;
+      min-width: 30px;
+    }
+
+    .due-date {
+      font-size: 12px;
+      color: #6c757d;
+    }
+
+    .status-active {
+      background-color: #28a745 !important;
+      color: white !important;
+    }
+
+    .status-pending {
+      background-color: #ffc107 !important;
+      color: #212529 !important;
+    }
+
+    .status-completed {
+      background-color: #17a2b8 !important;
+      color: white !important;
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .action-btn {
+      height: 48px;
+      justify-content: flex-start;
+      gap: 12px;
+      border-radius: 8px;
+    }
+
+    .activity-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .activity-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .activity-content p {
+      margin: 0 0 4px 0;
+      font-size: 14px;
+      color: #2c3e50;
+    }
+
+    .activity-time {
+      font-size: 12px;
+      color: #6c757d;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .workflow-status {
+        align-items: stretch;
+      }
+
+      .progress-section {
+        justify-content: space-between;
+      }
+    }

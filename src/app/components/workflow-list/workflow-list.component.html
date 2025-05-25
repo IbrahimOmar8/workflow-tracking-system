@@ -1,0 +1,135 @@
+<!-- Loading State -->
+<mat-card *ngIf="isLoading" class="loading-card">
+  <mat-card-content>
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p class="loading-text">Loading workflows...</p>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!-- Error State -->
+<mat-card *ngIf="error" class="error-card">
+  <mat-card-content>
+    <mat-icon class="error-icon">error</mat-icon>
+    <p class="error-text">{{ error }}</p>
+  </mat-card-content>
+</mat-card>
+
+<!-- Workflows List -->
+<mat-card *ngIf="!isLoading && workflows.length > 0" class="workflows-card">
+  <mat-card-header>
+    <mat-card-title class="workflows-title">
+      <mat-icon>account_tree</mat-icon>
+      Workflows
+    </mat-card-title>
+    <mat-card-subtitle>Manage your workflow processes</mat-card-subtitle>
+  </mat-card-header>
+  
+  <mat-divider></mat-divider>
+  
+  <mat-card-content class="workflows-content">
+    <mat-list class="workflows-list">
+      <mat-list-item *ngFor="let workflow of workflows; let i = index" class="workflow-item">
+        <div class="workflow-info">
+          <h4 class="workflow-name">{{ workflow?.name }}</h4>
+          <p class="workflow-description">{{ workflow?.description }}</p>
+          <div class="workflow-meta">
+            <span class="workflow-id">ID: {{ workflow?.id }}</span>
+            <span class="workflow-status" [ngClass]="'status-' + ('unknown')">
+              {{  'Unknown' }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="workflow-actions">
+          <button mat-icon-button 
+                  color="primary" 
+                  (click)="showDetails(workflow?.id!)"
+                  matTooltip="View Details"
+                  class="action-button">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          
+          <button mat-icon-button 
+                  color="accent" 
+                  (click)="editWorkflow(workflow?.id!)"
+                  matTooltip="Edit Workflow"
+                  class="action-button">
+            <mat-icon>edit</mat-icon>
+          </button>
+          
+          <button mat-icon-button 
+                  color="warn" 
+                  (click)="deleteWorkflow(workflow?.id!)"
+                  matTooltip="Delete Workflow"
+                  class="action-button">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        
+        <mat-divider *ngIf="i < workflows.length - 1"></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
+
+<!-- Empty State -->
+<mat-card *ngIf="!isLoading && workflows.length === 0" class="empty-card">
+  <mat-card-content>
+    <div class="empty-container">
+      <mat-icon class="empty-icon">inbox</mat-icon>
+      <h3 class="empty-title">No workflows found</h3>
+      <p class="empty-description">Create your first workflow to get started</p>
+      <button mat-raised-button color="primary" (click)="createWorkflow()">
+        <mat-icon>add</mat-icon>
+        Create Workflow
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!-- Workflow Details Dialog (if needed) -->
+<div *ngIf="selectedWorkflow" class="workflow-details-overlay">
+  <mat-card class="workflow-details-card">
+    <mat-card-header>
+      <mat-card-title>Workflow Details</mat-card-title>
+      <button mat-icon-button (click)="closeDetails()" class="close-button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+    
+    <mat-divider></mat-divider>
+    
+    <mat-card-content>
+      <div class="detail-row">
+        <strong>ID:</strong> {{ selectedWorkflow?.id! }}
+      </div>
+      <div class="detail-row">
+        <strong>Name:</strong> {{ selectedWorkflow.name }}
+      </div>
+      <div class="detail-row">
+        <strong>Description:</strong> {{ selectedWorkflow.description }}
+      </div>
+      <div class="detail-row">
+        <strong>Status:</strong> 
+        <span class="workflow-status" [ngClass]="'status-' + ( 'unknown')">
+          {{  'Unknown' }}
+        </span>
+      </div>
+      <!-- <div class="detail-row" *ngIf="selectedWorkflow.createdDate">
+        <strong>Created:</strong> {{ selectedWorkflow.createdDate | date:'medium' }}
+      </div> -->
+      <!-- <div class="detail-row" *ngIf="selectedWorkflow.lastModified">
+        <strong>Last Modified:</strong> {{ selectedWorkflow.lastModified | date:'medium' }}
+      </div> -->
+    </mat-card-content>
+    
+    <mat-card-actions align="end">
+      <button mat-button (click)="closeDetails()">Close</button>
+      <button mat-raised-button color="primary" (click)="editWorkflow(selectedWorkflow?.id!)">
+        Edit Workflow
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

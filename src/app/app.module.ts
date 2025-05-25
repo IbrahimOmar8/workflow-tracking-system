@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import {HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router'; 
 
 
@@ -19,6 +19,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
  
 
 import { AppComponent } from './app.component';
@@ -34,7 +35,7 @@ import { WorkflowCreateComponent } from './components/workflow-create/workflow-c
     BrowserModule,
     BrowserAnimationsModule, // ✅ required by Material
     ReactiveFormsModule,
-    HttpClientModule,
+    HttpClient,
     RouterModule.forRoot([]), // or use your actual routes
 
     // Material modules
@@ -51,7 +52,8 @@ import { WorkflowCreateComponent } from './components/workflow-create/workflow-c
     MatIconModule,
     MatTooltipModule ,
     MatSnackBar ,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialog
   ],
   providers: [],
   bootstrap: [AppComponent]

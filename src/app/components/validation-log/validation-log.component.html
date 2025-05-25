@@ -1,1 +1,87 @@
-<p>validation-log works!</p>
+<!-- validation-log.component.html -->
+<mat-card class="validation-log-card">
+  <mat-card-header>
+    <mat-card-title class="log-title">
+      <mat-icon>assignment</mat-icon>
+      Validation Log
+      <span class="log-count" *ngIf="filteredLogs.length > 0">
+        ({{ filteredLogs.length }})
+      </span>
+    </mat-card-title>
+    
+    <div class="log-actions">
+      <button mat-icon-button 
+              (click)="refreshLogs()" 
+              [disabled]="isLoading"
+              matTooltip="Refresh logs">
+        <mat-icon [class.spinning]="isLoading">refresh</mat-icon>
+      </button>
+      
+      <button mat-icon-button 
+              (click)="exportLogs()" 
+              [disabled]="filteredLogs.length === 0"
+              matTooltip="Export logs">
+        <mat-icon>download</mat-icon>
+      </button>
+      
+      <button mat-icon-button 
+              (click)="clearLogs()" 
+              [disabled]="logs.length === 0"
+              matTooltip="Clear all logs"
+              color="warn">
+        <mat-icon>clear_all</mat-icon>
+      </button>
+    </div>
+  </mat-card-header>
+
+  <!-- Filters -->
+  <div class="log-filters" *ngIf="showFilters">
+   
+
+    <!-- <mat-form-field appearance="outline" class="search-filter">
+      <mat-label>Search logs</mat-label>
+      <input matInput 
+             [(ngModel)]="searchTerm" 
+             (input)="onSearchChange()"
+             placeholder="Search in messages, details, or source">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field> -->
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading validation logs...</p>
+  </div>
+
+  <!-- Log Entries -->
+  <div class="log-container" [style.max-height]="maxHeight" *ngIf="!isLoading">
+    <div class="log-entry"   *ngFor="let log of filteredLogs;  " >
+
+      <div class="log-header">
+        <div class="log-level">  
+          <span class="level-text">{{ log.stepName | uppercase }}</span>
+        </div>
+        
+        <div class="log-timestamp">
+          {{ log.timestamp | date:'MMM dd, yyyy HH:mm:ss' }}
+        </div>
+      </div>
+
+      <div class="log-content">
+        <div class="log-message">{{ log.message }}</div>
+      </div>
+
+      
+    </div>
+
+  
+    <div class="empty-logs" *ngIf="filteredLogs.length === 0">
+      <mat-icon class="empty-icon">assignment</mat-icon>
+      <h3>No validation logs</h3>
+      <p>Validation logs will appear here when available</p>
+    </div>
+  </div>
+</mat-card>
